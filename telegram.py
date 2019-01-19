@@ -9,6 +9,9 @@ api_hash = ''
 
 
 def print_messages(numChats):
+    ourID = client.get_me().id
+    # print(ourID)
+    # ourID = 
     count = 0
     ids = []
     entities = []
@@ -26,19 +29,33 @@ def print_messages(numChats):
                 peer_id = message.to_id.user_id
                 print("We got a single message!")
                 # print(message.stringify())
+                userName = getUsername(userID)
+                print('(' + str(count) + ') ' + dialog.name + ' - ' + userName + ": " + message.message)
+                print("Comparing peer_ID " + str(peer_id) + " " + str(ourID))
+                if(peer_id == ourID):   
+                    peer_id = message.to_id.user_id
+                    print("CHANGING ID TO " + peer_id)
+                    entity = message.to_id
+                else: 
+                    entity = message.to_id
+                # print(message)
             except:
                 print("We got a group!")
                 # print(message.stringify())
                 entity = message.to_id
                 peer_id = message.to_id.channel_id
-            userName = getUsername(userID)
-            print('(' + str(count) + ') ' + dialog.name + ' - ' + userName + ": " + message.message)
+                userName = getUsername(userID)
+                print('(' + str(count) + ') ' + dialog.name + ' - ' + userName + ": " + message.message)
+                if(peer_id == ourID):   
+                    peer_id = message.to_id.user_id
+                    print("CHANGING ID TO " + peer_id)
+                    entity = message.to_id
         ids.append(str(peer_id))
         entities.append(entity)
         # print(message.stringify())
         count +=1
-    # print(ids)
-    # print(entities)
+    print(ids)
+    print(entities)
     select_username(ids, entities)
     
 def select_username(ids, entities):
@@ -81,11 +98,3 @@ username = client.get_me().username
 userID = str(client.get_me().id)
 print("Signed in as " + username + " - " + userID)
 print_messages(10)
-# print(client.get_me().username)
-
-
-# app = QApplication([])
-# label = QLabel(username + " - " + userID)
-# label.show()
-# app.exec_()
-
