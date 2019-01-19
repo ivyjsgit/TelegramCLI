@@ -1,6 +1,7 @@
 from telethon import TelegramClient, events, sync, types
 # import telethon.tl.types.PeerChannel
 from PyQt5.QtWidgets import QApplication, QLabel
+import os
 
 # These example values won't work. You must get your own api_id and
 # api_hash from https://my.telegram.org, under API Development.
@@ -9,6 +10,7 @@ api_hash = ''
 
 
 def print_messages(numChats):
+#This method lists the latest chats up to a certain number
     ourID = client.get_me().id
     # print(ourID)
     # ourID = 
@@ -42,24 +44,44 @@ def select_username(entities):
     loadChat(entities[int(userInput)])
 
 def loadChat(entity):
-    print("Loading chat!!!")
-    # messages = client.iter_messages(id)
+    print(entity)
+    os.system('cls' if os.name == 'nt' else 'clear')
+    try:
+        print(entity.title)
+    except:
+        try:
+            print(getUsername(entity.id))
+        except:
+            pass
+
     messages = client.get_messages(entity, limit = 10)
     messages.reverse()
     for message in messages:
         printTextualMessage(message)
+        # print(message)
     chatOptions(entity)
 def chatOptions(entity):
-    option = input("Options- (S)end (R)efresh: ")
+    option = input("Options- (S)end (R)efresh (C)hats: ")
     print(option)
     if option.lower() == 's' :
-        print("Sending!!!")
+        # print("Sending!!!")
         sendMessage(entity)
     if option.lower() == 'r':
         loadChat(entity)
+    if option.lower() == 'c':
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print_messages(10)
+    else:
+        sendMessage(entity, option)
+
 def sendMessage(entity):
     message = input("Message: ")
     client.send_message(entity, message=message)
+    loadChat(entity)
+    chatOptions(entity)
+def sendMessage(entity, message):
+    client.send_message(entity, message=message)
+    loadChat(entity)
     chatOptions(entity)
 
 def printTextualMessage(message):
